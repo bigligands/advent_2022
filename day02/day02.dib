@@ -1,0 +1,59 @@
+#!fsharp
+
+//Part 01
+
+let input = File.ReadAllLines("input.txt")
+
+let mutable score = 0
+
+for line in input do
+    let split = line.Split(" ")
+    let (opponent, me) = (split[0], split[1])
+    match opponent with
+    | "A" -> 
+        match me with
+        | "X" -> score <- score + 1 + 3
+        | "Y" -> score <- score + 2 + 6
+        | "Z" -> score <- score + 3 + 0
+    | "B" -> 
+        match me with
+        | "X" -> score <- score + 1 + 0
+        | "Y" -> score <- score + 2 + 3
+        | "Z" -> score <- score + 3 + 6
+    | "C" -> 
+        match me with
+        | "X" -> score <- score + 1 + 6
+        | "Y" -> score <- score + 2 + 0
+        | "Z" -> score <- score + 3 + 3
+
+printfn "%d" score
+
+#!fsharp
+
+//Part 02
+
+let input = File.ReadAllLines("input.txt")
+
+let mutable score = 0
+
+for line in input do
+    let split = line.Split(" ")
+    let (opponent, me) = (split[0], split[1])
+    match opponent with
+    | "A" -> 
+        match me with
+        | "X" -> score <- score + 3 + 0
+        | "Y" -> score <- score + 1 + 3
+        | "Z" -> score <- score + 2 + 6
+    | "B" -> 
+        match me with
+        | "X" -> score <- score + 1 + 0
+        | "Y" -> score <- score + 2 + 3
+        | "Z" -> score <- score + 3 + 6
+    | "C" -> 
+        match me with
+        | "X" -> score <- score + 2 + 0
+        | "Y" -> score <- score + 3 + 3
+        | "Z" -> score <- score + 1 + 6
+
+printfn "%d" score
