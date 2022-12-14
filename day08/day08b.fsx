@@ -15,9 +15,7 @@ let build_tree_grid input =
 let tree_grid = build_tree_grid input
 
 let check_view (pos: int * int) (rows: int list) (cols: int list) =
-
     let check_left_right (pos: int) (rows: int list) =
-
         let left =
             match pos with
             | 0 -> 0
@@ -36,9 +34,7 @@ let check_view (pos: int * int) (rows: int list) (cols: int list) =
 
         left * right
 
-
     let check_up_down (pos: int) (cols: int list) =
-
         let up =
             match pos with
             | 0 -> 0

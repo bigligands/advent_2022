@@ -13,14 +13,9 @@ let build_tree_grid input =
     divide_row input []
 
 let tree_grid = build_tree_grid input
-// let tree_transposed = tree_grid |> List.toSeq |> List.transpose
-
 
 let is_visible (pos: int * int) (rows: int list) (cols: int list) =
-
     let check_left_right (pos: int) (rows: int list) =
-        printfn "left right: %d" rows[pos]
-
         match pos with
         | 0 -> true
         | edge when edge = rows.Length - 1 -> true
@@ -37,8 +32,6 @@ let is_visible (pos: int * int) (rows: int list) (cols: int list) =
                 false
 
     let check_up_down (pos: int) (cols: int list) =
-        printfn "up down: %d" cols[pos]
-
         match pos with
         | 0 -> true
         | edge when edge = cols.Length - 1 -> true
@@ -62,8 +55,6 @@ let is_visible (pos: int * int) (rows: int list) (cols: int list) =
         true
     else
         false
-
-
 
 let scan_for_visible_trees grid =
     let rec check_position (visible: int) (row: int) (grid_rows: list<int list>) (grid_cols: list<int list>) =
