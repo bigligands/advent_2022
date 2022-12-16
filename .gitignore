@@ -1,2 +1,5 @@
 .vs/
 .fake
+*/target/
+*.lock
+*.toml
