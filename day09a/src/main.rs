@@ -39,48 +39,18 @@ fn move_tail(head: &Point<i32>, tail: &mut Point<i32>) {
     let diff = *head - *tail;
     if diff.x.abs() > 1 {
         match (diff.x, diff.y) {
-            (2, 0) => tail.x += 1,
-            (2, 1) => {
-                tail.x += 1;
-                tail.y += 1;
+            (x, y) => {
+                tail.x += x / 2;
+                tail.y += y;
             }
-            (2, -1) => {
-                tail.x += 1;
-                tail.y -= 1;
-            }
-            (-2, 0) => tail.x -= 1,
-            (-2, 1) => {
-                tail.x -= 1;
-                tail.y += 1;
-            }
-            (-2, -1) => {
-                tail.x -= 1;
-                tail.y -= 1;
-            }
-            _ => panic!("don't know where to go"),
         }
     }
     if diff.y.abs() > 1 {
         match (diff.x, diff.y) {
-            (0, 2) => tail.y += 1,
-            (1, 2) => {
-                tail.x += 1;
-                tail.y += 1;
+            (x, y) => {
+                tail.x += x;
+                tail.y += y / 2;
             }
-            (-1, 2) => {
-                tail.x -= 1;
-                tail.y += 1;
-            }
-            (0, -2) => tail.y -= 1,
-            (1, -2) => {
-                tail.x += 1;
-                tail.y -= 1;
-            }
-            (-1, -2) => {
-                tail.x -= 1;
-                tail.y -= 1;
-            }
-            _ => panic!("don't know where to go"),
         }
     }
 }
