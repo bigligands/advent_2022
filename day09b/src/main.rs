@@ -12,13 +12,13 @@ fn main() {
 
     let tail_history = input
         .iter()
-        .scan(rope_knots, |t, inp| Some(move_knots(*inp, t))) // getting tail history
+        .scan(rope_knots, |t, inp| Some(get_tail_movement(*inp, t))) // getting tail history
         .flatten()
         .collect::<HashSet<_>>();
     println!("history: {:?}", tail_history.len());
 }
 
-fn move_knots(input: &str, knots: &mut [Point<i32>]) -> Vec<Point<i32>> {
+fn get_tail_movement(input: &str, knots: &mut [Point<i32>]) -> Vec<Point<i32>> {
     let directions = parse_directions(input);
 
     let tail_history: Vec<Point<i32>> = Vec::new();
@@ -40,7 +40,7 @@ fn rec_move_knots(knots: &mut [Point<i32>]) {
             if tail.is_empty() {
                 ()
             } else {
-                get_tail_moved(*head, tail);
+                move_next_knot(*head, tail);
                 rec_move_knots(tail)
             }
         }
@@ -48,7 +48,7 @@ fn rec_move_knots(knots: &mut [Point<i32>]) {
     }
 }
 
-fn get_tail_moved(head: Point<i32>, tail_array: &mut [Point<i32>]) {
+fn move_next_knot(head: Point<i32>, tail_array: &mut [Point<i32>]) {
     let tail = tail_array.first_mut().unwrap();
     let diff = head - *tail;
 
