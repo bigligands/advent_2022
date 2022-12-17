@@ -1,5 +1,5 @@
-#![allow(unused_variables, dead_code, unused_mut)]
 use std::collections::HashSet;
+use std::fmt;
 use std::ops::{Add, Sub};
 
 fn main() {
@@ -7,45 +7,59 @@ fn main() {
         .trim()
         .split("\n")
         .collect::<Vec<_>>();
-    println!("{:?}", input);
+
+    let rope_knots = [Point { x: 0, y: 0 }; 10];
 
     let tail_history = input
         .iter()
-        .scan(
-            (Point { x: 0, y: 0 }, Point { x: 0, y: 0 }),
-            |(head, tail), inp| Some(move_head(*inp, head, tail)),
-        )
+        .scan(rope_knots, |t, inp| Some(move_knots(*inp, t))) // getting tail history
         .flatten()
-        .collect::<HashSet<_>>()
-        .len();
-    println!("{} visited at least once.", tail_history);
+        .collect::<HashSet<_>>();
+    println!("history: {:?}", tail_history.len());
 }
 
-fn move_head(input: &str, head: &mut Point<i32>, tail: &mut Point<i32>) -> HashSet<Point<i32>> {
-    // Move head and determine tail movement for each step
-    let movement = parse_directions(input);
-    let mut tail_history: HashSet<Point<i32>> = HashSet::new();
-    tail_history.insert(Point { x: 0, y: 0 });
-    let history = movement.iter().fold(tail_history, |mut h, step| {
+fn move_knots(input: &str, knots: &mut [Point<i32>]) -> Vec<Point<i32>> {
+    let directions = parse_directions(input);
+
+    let tail_history: Vec<Point<i32>> = Vec::new();
+
+    let movement = directions.iter().fold(tail_history, |mut hist, step| {
+        let head = knots.first_mut().unwrap();
         *head = *head + *step;
-        move_tail(head, tail);
-        h.insert(tail.clone());
-        h
+        rec_move_knots(knots);
+        hist.push(knots.iter().last().unwrap().to_owned()); // push history of last knot
+        hist
     });
-    history
+    movement
 }
 
-fn move_tail(head: &Point<i32>, tail: &mut Point<i32>) {
-    // Move the tail relative to head to keep it 1 position away
-    let diff = *head - *tail;
+fn rec_move_knots(knots: &mut [Point<i32>]) {
+    // recursively move each knot
+    match knots {
+        [head, tail @ ..] => {
+            if tail.is_empty() {
+                ()
+            } else {
+                get_tail_moved(*head, tail);
+                rec_move_knots(tail)
+            }
+        }
+        _ => (),
+    }
+}
 
-    if diff.x.abs() > 1 {
+fn get_tail_moved(head: Point<i32>, tail_array: &mut [Point<i32>]) {
+    let tail = tail_array.first_mut().unwrap();
+    let diff = head - *tail;
+
+    if diff.x.abs() > 1 && diff.y.abs() < 2 {
         tail.x += diff.x / 2;
         tail.y += diff.y;
-    }
-
-    if diff.y.abs() > 1 {
+    } else if diff.y.abs() > 1 && diff.x.abs() < 2 {
         tail.x += diff.x;
+        tail.y += diff.y / 2;
+    } else if diff.y.abs() > 1 && diff.x.abs() > 1 {
+        tail.x += diff.x / 2;
         tail.y += diff.y / 2;
     }
 }
@@ -92,5 +106,11 @@ impl<T: Sub<Output = T>> Sub for Point<T> {
             x: self.x - other.x,
             y: self.y - other.y,
         }
+    }
+}
+
+impl<T: std::fmt::Display> fmt::Display for Point<T> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "({}, {})", self.x, self.y)
     }
 }
