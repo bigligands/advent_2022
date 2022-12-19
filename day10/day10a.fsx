@@ -4,17 +4,17 @@ open System
 let input = File.ReadAllLines(@"./day10/input.txt") |> List.ofArray
 
 type Instruction =
-    | Noop
+    | Noop of int
     | Add of int
 
 let (|IsAdd|_|) line =
     match line |> Seq.toList with
-    | 'a' :: 'd' :: 'd' :: 'x' :: ' ' :: value -> Some(value |> String.Concat |> int)
+    | 'a' :: 'd' :: 'd' :: 'x' :: ' ' :: value -> Some(Add(value |> String.Concat |> int))
     | _ -> None
 
 let (|IsNoop|_|) line =
     match line with
-    | "noop" -> Some Noop
+    | "noop" -> Some (Noop(0))
     | _ -> None
 
 let mutable cache = []
@@ -35,7 +35,7 @@ let iterate_cycles cycles input =
                 match input with
                 | cmd :: tail_instructions ->
                     match cmd with
-                    | IsAdd a ->
+                    | IsAdd (Add(a)) -> // match constructor to get value
                         match buffer with
                         | register_value :: tail_buffer ->
                             cycle 
@@ -46,7 +46,7 @@ let iterate_cycles cycles input =
                                 (register + register_value) //register
                                 (cycle_count + 1) // cycle_count
                         | [] -> cycle remaining_cycles tail_instructions [ a ] 1 register (cycle_count + 1)
-                    | IsNoop n ->
+                    | IsNoop (Noop(n)) ->
                         match buffer with
                         | register_value :: tail_buffer ->
                             cycle
